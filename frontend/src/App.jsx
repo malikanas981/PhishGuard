@@ -1,7 +1,12 @@
+import Dashboard from './pages/Dashboard'
 import { useState } from 'react'
 import { loginUser, scanUrl as scanUrlApi } from './services/api'
 
 function App() {
+  if (window.location.pathname === '/dashboard') {
+  return <Dashboard />
+}
+
   const [url, setUrl] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -48,6 +53,12 @@ function App() {
           <span className="rounded-full bg-cyan-400/10 px-4 py-2 text-sm text-cyan-400">
             Cybersecurity Platform
           </span>
+          <button
+  onClick={() => window.location.href = '/dashboard'}
+  className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
+>
+  Dashboard
+</button>
         </div>
       </header>
 
