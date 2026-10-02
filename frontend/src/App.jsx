@@ -1,18 +1,15 @@
-import Dashboard from './pages/Dashboard'
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
 import { loginUser, scanUrl as scanUrlApi } from './services/api'
+import Dashboard from './pages/Dashboard'
 
-function App() {
-  if (window.location.pathname === '/dashboard') {
-  return <Dashboard />
-}
-
+function Scanner() {
   const [url, setUrl] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const scanUrl = async () => {
+  async function scanUrl() {
     if (!url.trim()) {
       setError('Please enter a URL.')
       return
@@ -24,113 +21,108 @@ function App() {
 
     try {
       const loginData = await loginUser(
-  'test@example.com',
-  'TestPassword123!',
-)
-      
+        'test@example.com',
+        'TestPassword123!',
+      )
 
       const scanData = await scanUrlApi(
-  loginData.access_token,
-  url.trim(),
-)
+        loginData.access_token,
+        url.trim(),
+      )
 
       setResult(scanData)
     } catch (err) {
-      setError(err.message)
+      setError(err.message || 'Unable to scan URL.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <header className="border-b border-slate-800">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <h1 className="text-2xl font-bold">
-            Phish<span className="text-cyan-400">Guard</span>
-          </h1>
+    <div className="min-h-screen bg-slate-950 px-6 py-10 text-white">
+      <div className="mx-auto max-w-5xl">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-widest text-cyan-400">
+              PhishGuard
+            </p>
 
-          <span className="rounded-full bg-cyan-400/10 px-4 py-2 text-sm text-cyan-400">
-            Cybersecurity Platform
-          </span>
-          <button
-  onClick={() => window.location.href = '/dashboard'}
-  className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
->
-  Dashboard
-</button>
+            <p className="mt-1 text-sm text-slate-400">
+              Cybersecurity Platform
+            </p>
+          </div>
+
+          <Link
+            to="/dashboard"
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
+          >
+            Dashboard
+          </Link>
         </div>
-      </header>
 
-      <main className="mx-auto max-w-4xl px-6 py-20">
-        <div className="text-center">
+        <div className="mt-16">
           <p className="text-sm font-semibold uppercase tracking-widest text-cyan-400">
             Phishing URL Detection
           </p>
 
-          <h2 className="mt-4 text-5xl font-bold leading-tight">
-            Check a URL before
-            <span className="text-cyan-400"> you click.</span>
-          </h2>
+          <h1 className="mt-3 text-4xl font-bold">
+            Check a URL before you click.
+          </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+          <p className="mt-4 max-w-2xl text-slate-400">
             PhishGuard analyzes suspicious URLs and explains potential
             cybersecurity risks.
           </p>
-        </div>
 
-        <div className="mt-12 rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="mt-10 flex max-w-3xl gap-3">
             <input
-              type="text"
+              type="url"
               value={url}
               onChange={(event) => setUrl(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  scanUrl()
-                }
-              }}
               placeholder="https://example.com"
-              className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400"
+              className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-cyan-400"
             />
 
             <button
               onClick={scanUrl}
               disabled={loading}
-              className="rounded-lg bg-cyan-500 px-7 py-3 font-semibold text-slate-950 hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? 'Scanning...' : 'Scan URL'}
             </button>
           </div>
 
           {error && (
-            <div className="mt-5 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-400">
+            <div className="mt-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-300">
               {error}
             </div>
           )}
 
           {result && (
-            <div className="mt-6 rounded-xl border border-slate-700 bg-slate-950 p-6">
-              <div className="flex items-center justify-between">
+            <div className="mt-8 rounded-xl border border-slate-800 bg-slate-900 p-6">
+              <h2 className="text-2xl font-bold">Scan Result</h2>
+
+              <div className="mt-5 grid gap-4 sm:grid-cols-3">
                 <div>
                   <p className="text-sm text-slate-400">Risk Score</p>
-                  <p className="mt-1 text-4xl font-bold">
-                    {result.risk_score}
-                    <span className="text-lg text-slate-500">/100</span>
+                  <p className="mt-1 text-3xl font-bold">
+                    {result.risk_score}/100
                   </p>
                 </div>
 
-                <span
-                  className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                    result.risk_level === 'HIGH'
-                      ? 'bg-red-500/10 text-red-400'
-                      : result.risk_level === 'MEDIUM'
-                        ? 'bg-yellow-500/10 text-yellow-400'
-                        : 'bg-green-500/10 text-green-400'
-                  }`}
-                >
-                  {result.risk_level}
-                </span>
+                <div>
+                  <p className="text-sm text-slate-400">Risk Level</p>
+                  <p className="mt-1 text-3xl font-bold">
+                    {result.risk_level}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-400">Scanned URL</p>
+                  <p className="mt-1 break-all text-sm text-slate-200">
+                    {result.url}
+                  </p>
+                </div>
               </div>
 
               <div className="mt-6">
@@ -138,21 +130,26 @@ function App() {
                   Analysis
                 </p>
 
-                <p className="mt-2 leading-7 text-slate-400">
+                <p className="mt-2 text-slate-400">
                   {result.reasons}
-                </p>
-              </div>
-
-              <div className="mt-5 border-t border-slate-800 pt-5">
-                <p className="break-all text-sm text-slate-500">
-                  {result.url}
                 </p>
               </div>
             </div>
           )}
         </div>
-      </main>
+      </div>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Scanner />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
