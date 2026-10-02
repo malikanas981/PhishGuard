@@ -6,6 +6,7 @@ from app.db.session import get_db
 from app.detection.url_analyzer import analyze_url
 from app.models.scan import Scan
 from app.schemas.scan import ScanCreate, ScanResponse
+from app.schemas.dashboard import DashboardStats
 from app.security.auth import get_current_user
 from app.models.user import User
 
@@ -46,3 +47,18 @@ def get_scan_history(
     ).all()
 
     return scans
+@router.get("/stats", response_model=DashboardStats)
+def get_dashboard_stats(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    scans = db.scalars(
+        select(Scan).where(Scan.user_id == current_user.id)
+    ).all()
+
+    return DashboardStats(
+        total_scans=len(scans),
+        low_risk=sum(scan.risk_level == "LOW" for scan in scans),
+        medium_risk=sum(scan.risk_level == "MEDIUM" for scan in scans),
+        high_risk=sum(scan.risk_level == "HIGH" for scan in scans),
+    )
