@@ -62,3 +62,19 @@ export async function getDashboardStats(token) {
 
 
 export default API_BASE_URL
+
+export async function getScanHistory(token) {
+  const response = await fetch(`${API_BASE_URL}/scans/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Unable to load scan history')
+  }
+
+  return data
+}
