@@ -44,4 +44,21 @@ export async function scanUrl(token, url) {
 
   return data
 }
+export async function getDashboardStats(token) {
+  const response = await fetch(`${API_BASE_URL}/scans/stats`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Unable to load dashboard statistics')
+  }
+
+  return data
+}
+
+
 export default API_BASE_URL
