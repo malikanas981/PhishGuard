@@ -2,6 +2,7 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
 import { loginUser, scanUrl as scanUrlApi } from './services/api'
 import Dashboard from './pages/Dashboard'
+import Login from './pages/Login'
 
 function Scanner() {
   const [url, setUrl] = useState('')
@@ -20,13 +21,15 @@ function Scanner() {
     setResult(null)
 
     try {
-      const loginData = await loginUser(
-        'test@example.com',
-        'TestPassword123!',
-      )
+      const token = localStorage.getItem('phishguard_token')
+
+      if (!token) {
+        setError('Please sign in before scanning a URL.')
+        return
+      }
 
       const scanData = await scanUrlApi(
-        loginData.access_token,
+        token,
         url.trim(),
       )
 
@@ -148,9 +151,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Scanner />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   )
 }
 
 export default App
+
+

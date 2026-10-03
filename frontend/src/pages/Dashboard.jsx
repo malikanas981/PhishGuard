@@ -14,12 +14,11 @@ function Dashboard() {
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const loginData = await loginUser(
-          'test@example.com',
-          'TestPassword123!',
-        )
+        const token = localStorage.getItem('phishguard_token')
 
-        const token = loginData.access_token
+        if (!token) {
+          throw new Error('Please sign in first')
+        }
 
         const [dashboardStats, scanHistory] = await Promise.all([
           getDashboardStats(token),
@@ -172,3 +171,4 @@ function Dashboard() {
 }
 
 export default Dashboard
+
