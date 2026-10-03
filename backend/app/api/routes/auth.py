@@ -8,7 +8,13 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserLogin, UserResponse
+from app.schemas.user import (
+    EmailVerificationRequest,
+    ResendVerificationRequest,
+    UserCreate,
+    UserLogin,
+    UserResponse,
+)
 from app.security.auth import (
     create_access_token,
     get_current_user,
@@ -99,19 +105,22 @@ def login_user(
         "access_token": access_token,
         "token_type": "bearer",
     }
+
+
 @router.get("/me", response_model=UserResponse)
 def get_my_profile(
     current_user: User = Depends(get_current_user),
 ):
     return current_user
+
+
 @router.post("/verify-email")
 def verify_email(
-    email: str,
-    otp: str,
+    request: EmailVerificationRequest,
     db: Session = Depends(get_db),
 ):
     user = db.scalar(
-        select(User).where(User.email == email)
+        select(User).where(User.email == request.email)
     )
 
     if not user:
@@ -150,7 +159,7 @@ def verify_email(
             detail="Maximum verification attempts exceeded",
         )
 
-    if not verify_otp(otp, user.verification_otp_hash):
+    if not verify_otp(request.otp, user.verification_otp_hash):
         user.verification_otp_attempts += 1
         db.commit()
 
@@ -170,13 +179,15 @@ def verify_email(
     return {
         "message": "Email verified successfully",
     }
+
+
 @router.post("/resend-verification")
 def resend_verification_code(
-    email: str,
+    request: ResendVerificationRequest,
     db: Session = Depends(get_db),
 ):
     user = db.scalar(
-        select(User).where(User.email == email)
+        select(User).where(User.email == request.email)
     )
 
     if not user:

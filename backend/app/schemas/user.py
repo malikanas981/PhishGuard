@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+﻿from pydantic import BaseModel, EmailStr, Field
 
 
 class UserCreate(BaseModel):
@@ -10,6 +10,15 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+
+class EmailVerificationRequest(BaseModel):
+    email: EmailStr
+    otp: str = Field(min_length=6, max_length=6, pattern=r"^\d{6}$")
+
+
+class ResendVerificationRequest(BaseModel):
+    email: EmailStr
 
 
 class UserResponse(BaseModel):

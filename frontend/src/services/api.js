@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api'
+﻿const API_BASE_URL = 'http://127.0.0.1:8000/api'
 
 export async function registerUser(email, fullName, password) {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -103,13 +103,18 @@ export async function getScanHistory(token) {
 
   return data
 }
+
 export async function verifyEmail(email, otp) {
-  const response = await fetch(
-    `${API_BASE_URL}/auth/verify-email?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`,
-    {
-      method: 'POST',
+  const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify({
+      email,
+      otp,
+    }),
+  })
 
   const data = await response.json()
 
@@ -121,12 +126,15 @@ export async function verifyEmail(email, otp) {
 }
 
 export async function resendVerificationCode(email) {
-  const response = await fetch(
-    `${API_BASE_URL}/auth/resend-verification?email=${encodeURIComponent(email)}`,
-    {
-      method: 'POST',
+  const response = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify({
+      email,
+    }),
+  })
 
   const data = await response.json()
 
@@ -136,4 +144,5 @@ export async function resendVerificationCode(email) {
 
   return data
 }
+
 export default API_BASE_URL
