@@ -1,4 +1,4 @@
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
 import { loginUser, scanUrl as scanUrlApi } from './services/api'
 import Dashboard from './pages/Dashboard'
@@ -146,12 +146,29 @@ function Scanner() {
   )
 }
 
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("phishguard_token")
+
+  if (!token) {
+    return <Navigate to="/login" replace />
+  }
+
+  return children
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Scanner />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
@@ -160,6 +177,7 @@ function App() {
 }
 
 export default App
+
 
 
 
