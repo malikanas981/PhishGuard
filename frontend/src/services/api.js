@@ -103,5 +103,37 @@ export async function getScanHistory(token) {
 
   return data
 }
+export async function verifyEmail(email, otp) {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/verify-email?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`,
+    {
+      method: 'POST',
+    },
+  )
 
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Email verification failed')
+  }
+
+  return data
+}
+
+export async function resendVerificationCode(email) {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/resend-verification?email=${encodeURIComponent(email)}`,
+    {
+      method: 'POST',
+    },
+  )
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Unable to resend verification code')
+  }
+
+  return data
+}
 export default API_BASE_URL

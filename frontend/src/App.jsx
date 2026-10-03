@@ -4,6 +4,7 @@ import { loginUser, scanUrl as scanUrlApi } from './services/api'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import VerifyEmail from './pages/VerifyEmail'
 
 function Scanner() {
   const [url, setUrl] = useState('')
@@ -171,12 +172,14 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>
   )
 }
 
 export default App
+
 
 
 

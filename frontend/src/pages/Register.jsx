@@ -18,7 +18,7 @@ function Register() {
 
     try {
       await registerUser(email, fullName, password)
-      navigate('/login')
+      navigate('/verify-email', { state: { email } })
     } catch (err) {
       setError(err.message || 'Registration failed')
     } finally {
