@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { loginUser, scanUrl as scanUrlApi } from './services/api'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
+import Register from './pages/Register'
 
 function Scanner() {
   const [url, setUrl] = useState('')
@@ -152,11 +153,13 @@ function App() {
         <Route path="/" element={<Scanner />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   )
 }
 
 export default App
+
 
 

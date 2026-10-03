@@ -1,5 +1,31 @@
 const API_BASE_URL = 'http://127.0.0.1:8000/api'
 
+export async function registerUser(email, fullName, password) {
+  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+      full_name: fullName,
+      password,
+    }),
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(
+      data.detail?.[0]?.msg ||
+        data.detail ||
+        'Registration failed',
+    )
+  }
+
+  return data
+}
+
 export async function loginUser(email, password) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
@@ -20,6 +46,7 @@ export async function loginUser(email, password) {
 
   return data
 }
+
 export async function scanUrl(token, url) {
   const response = await fetch(`${API_BASE_URL}/scans/`, {
     method: 'POST',
@@ -44,6 +71,7 @@ export async function scanUrl(token, url) {
 
   return data
 }
+
 export async function getDashboardStats(token) {
   const response = await fetch(`${API_BASE_URL}/scans/stats`, {
     headers: {
@@ -60,9 +88,6 @@ export async function getDashboardStats(token) {
   return data
 }
 
-
-export default API_BASE_URL
-
 export async function getScanHistory(token) {
   const response = await fetch(`${API_BASE_URL}/scans/`, {
     headers: {
@@ -78,3 +103,5 @@ export async function getScanHistory(token) {
 
   return data
 }
+
+export default API_BASE_URL
