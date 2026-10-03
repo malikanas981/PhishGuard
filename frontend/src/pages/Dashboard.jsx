@@ -4,13 +4,27 @@ import {
   getDashboardStats,
   getScanHistory,
 } from '../services/api'
-
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+} 
+from 'recharts'
 function Dashboard() {
   const navigate = useNavigate()
   const [stats, setStats] = useState(null)
   const [scans, setScans] = useState([])
   const [error, setError] = useState('')
-
+    const riskData = stats
+    ? [
+        { name: 'Low Risk', value: stats.low_risk },
+        { name: 'Medium Risk', value: stats.medium_risk },
+        { name: 'High Risk', value: stats.high_risk },
+      ]
+    : []
+  const riskColors = ['#22c55e', '#eab308', '#ef4444']
   useEffect(() => {
     async function loadDashboard() {
       try {
@@ -99,37 +113,71 @@ function Dashboard() {
 
         {stats && (
           <>
+                     <h2 className="text-2xl font-bold mb-5">
+  Security Overview
+</h2>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+<div className="rounded-xl border border-cyan-500/30 bg-slate-900 p-6">
                 <p className="text-sm text-slate-400">Total Scans</p>
-                <p className="mt-2 text-3xl font-bold">{stats.total_scans}</p>
+<p className="mt-2 text-3xl font-bold text-cyan-400">{stats.total_scans}</p>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+<div className="rounded-xl border border-emerald-500/30 bg-slate-900 p-6">
                 <p className="text-sm text-slate-400">Low Risk</p>
-                <p className="mt-2 text-3xl font-bold">{stats.low_risk}</p>
+<p className="mt-2 text-3xl font-bold text-emerald-400">{stats.low_risk}</p>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+<div className="rounded-xl border border-yellow-500/30 bg-slate-900 p-6">
                 <p className="text-sm text-slate-400">Medium Risk</p>
-                <p className="mt-2 text-3xl font-bold">{stats.medium_risk}</p>
+<p className="mt-2 text-3xl font-bold text-yellow-400">{stats.medium_risk}</p>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+<div className="rounded-xl border border-red-500/30 bg-slate-900 p-6">
                 <p className="text-sm text-slate-400">High Risk</p>
-                <p className="mt-2 text-3xl font-bold">{stats.high_risk}</p>
+<p className="mt-2 text-3xl font-bold text-red-400">{stats.high_risk}</p>
               </div>
             </div>
+       
+                        <div className="mt-10 rounded-xl border border-slate-800 bg-slate-900 p-6">
+              <h2 className="text-2xl font-bold">
+                Risk Distribution
+              </h2>
+<p className="mt-2 text-sm text-slate-400">
+  Breakdown of your scanned URLs by risk level.
+</p>
+              <div className="mt-8 flex justify-center">
+                <PieChart width={450} height={320}>
+                  <Pie
+                    data={riskData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                                        label={({ name, value }) => `${name}: ${value}`}
+                  >
+                    {riskData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${entry.name}`}
+                        fill={riskColors[index]}
+                      />
+                    ))}
+                  </Pie>
 
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </div>
+            </div>
             <div className="mt-10 rounded-xl border border-slate-800 bg-slate-900">
-              <div className="border-b border-slate-800 p-6">
+               <div className="border-b border-slate-800 p-6">
                 <h2 className="text-2xl font-bold">
                   Recent Scan History
                 </h2>
-
-                <p className="mt-2 text-sm text-slate-400">
-                  Your latest phishing URL analysis results.
-                </p>
+<p className="mt-2 text-sm text-slate-400">
+  Review your latest URL security analysis results.
+</p>
+                
               </div>
 
               <div className="overflow-x-auto">
