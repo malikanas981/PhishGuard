@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   getDashboardStats,
   getScanHistory,
-  loginUser,
 } from '../services/api'
 
 function Dashboard() {
+  const navigate = useNavigate()
   const [stats, setStats] = useState(null)
   const [scans, setScans] = useState([])
   const [error, setError] = useState('')
@@ -49,12 +49,24 @@ function Dashboard() {
             </p>
           </div>
 
-          <Link
-            to="/"
-            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
-          >
-            Scanner
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
+            >
+              Scanner
+            </Link>
+
+            <button
+              onClick={() => {
+                localStorage.removeItem("phishguard_token")
+                navigate("/login")
+              }}
+              className="rounded-lg border border-red-500/30 px-4 py-2 text-sm font-semibold text-red-300 hover:border-red-400 hover:text-red-200"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         <div className="mt-12">
@@ -171,4 +183,8 @@ function Dashboard() {
 }
 
 export default Dashboard
+
+
+
+
 
