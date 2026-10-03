@@ -21,9 +21,9 @@ function Register() {
       navigate('/verify-email', { state: { email } })
     } catch (err) {
       if (err.message === 'Email is already registered') {
-        navigate('/verify-email', { state: { email } })
-        return
-      }
+  navigate('/login')
+  return
+}
 
       setError(err.message || 'Registration failed')
     } finally {
