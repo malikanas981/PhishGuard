@@ -1,4 +1,4 @@
-from urllib.parse import unquote, urlparse
+﻿from urllib.parse import unquote, urlparse
 
 
 SUSPICIOUS_KEYWORDS = {
@@ -30,6 +30,7 @@ def analyze_url(url: str) -> dict:
 
     score = 0
     reasons = []
+    indicator_count = 0
 
     hostname = (parsed_url.hostname or "").lower()
     decoded_url = unquote(url)
@@ -37,27 +38,33 @@ def analyze_url(url: str) -> dict:
 
     if parsed_url.scheme != "https":
         score += 20
+        indicator_count += 1
         reasons.append("URL does not use HTTPS")
 
     if "@" in url:
         score += 25
+        indicator_count += 1
         reasons.append("URL contains @ symbol")
 
     if len(url) > 100:
         score += 10
+        indicator_count += 1
         reasons.append("URL is unusually long")
 
     if hostname.replace(".", "").isdigit():
         score += 25
+        indicator_count += 1
         reasons.append("URL uses an IP address instead of a domain name")
 
     if "-" in hostname:
         score += 5
+        indicator_count += 1
         reasons.append("Domain contains hyphens")
 
     if decoded_url != url:
         score += 10
-        reasons.append('URL contains percent-encoded characters')
+        indicator_count += 1
+        reasons.append("URL contains percent-encoded characters")
 
     keyword_matches = sorted(
         {
@@ -69,6 +76,7 @@ def analyze_url(url: str) -> dict:
 
     if keyword_matches:
         score += min(len(keyword_matches) * 5, 20)
+        indicator_count += 1
         reasons.append(
             "URL contains suspicious keywords: "
             + ", ".join(keyword_matches)
@@ -78,21 +86,22 @@ def analyze_url(url: str) -> dict:
 
     if subdomain_count >= 3:
         score += 15
+        indicator_count += 1
         reasons.append("URL contains an unusually high number of subdomains")
 
     if parsed_url.port and parsed_url.port not in {80, 443}:
         score += 10
+        indicator_count += 1
         reasons.append(
             f"URL uses a non-standard port: {parsed_url.port}"
         )
 
     if hostname in SHORTENER_DOMAINS:
         score += 15
+        indicator_count += 1
         reasons.append("URL uses a URL shortening service")
 
     # Multiple phishing indicators together increase the risk.
-    indicator_count = len(reasons)
-
     if indicator_count >= 3:
         score += 20
         reasons.append("URL contains multiple suspicious indicators")
