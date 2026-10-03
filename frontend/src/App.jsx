@@ -2,6 +2,7 @@ import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
 import { loginUser, scanUrl as scanUrlApi } from './services/api'
 import Dashboard from './pages/Dashboard'
+import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import VerifyEmail from './pages/VerifyEmail'
@@ -170,6 +171,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
@@ -179,6 +181,7 @@ function App() {
 }
 
 export default App
+
 
 
 

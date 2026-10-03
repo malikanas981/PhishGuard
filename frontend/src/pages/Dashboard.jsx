@@ -50,6 +50,12 @@ function Dashboard() {
           </div>
 
           <div className="flex items-center gap-3">
+          <Link
+  to="/profile"
+  className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
+>
+  Profile
+</Link>
             <Link
               to="/"
               className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
@@ -183,6 +189,9 @@ function Dashboard() {
 }
 
 export default Dashboard
+
+
+
 
 
 

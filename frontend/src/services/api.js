@@ -146,3 +146,19 @@ export async function resendVerificationCode(email) {
 }
 
 export default API_BASE_URL
+
+export async function getMyProfile(token) {
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Unable to load profile')
+  }
+
+  return data
+}
