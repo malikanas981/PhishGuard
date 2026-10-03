@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 
 SUSPICIOUS_KEYWORDS = {
@@ -32,7 +32,8 @@ def analyze_url(url: str) -> dict:
     reasons = []
 
     hostname = (parsed_url.hostname or "").lower()
-    url_lower = url.lower()
+    decoded_url = unquote(url)
+    url_lower = decoded_url.lower()
 
     if parsed_url.scheme != "https":
         score += 20
@@ -53,6 +54,10 @@ def analyze_url(url: str) -> dict:
     if "-" in hostname:
         score += 5
         reasons.append("Domain contains hyphens")
+
+    if decoded_url != url:
+        score += 10
+        reasons.append('URL contains percent-encoded characters')
 
     keyword_matches = sorted(
         {

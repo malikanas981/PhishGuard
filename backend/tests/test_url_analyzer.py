@@ -50,3 +50,11 @@ def test_suspicious_paypal_login_url():
     assert "URL contains multiple suspicious indicators" in result["reasons"]
 
 
+
+
+def test_percent_encoded_login_path_is_suspicious():
+    result = analyze_url('https://example.com/%6C%6F%67%69%6E')
+
+    assert result['risk_level'] == 'LOW'
+    assert result['risk_score'] == 25
+
