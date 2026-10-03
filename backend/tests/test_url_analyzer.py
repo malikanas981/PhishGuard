@@ -1,4 +1,4 @@
-from app.detection.url_analyzer import analyze_url
+﻿from app.detection.url_analyzer import analyze_url
 
 
 def test_safe_https_url():
@@ -57,4 +57,11 @@ def test_percent_encoded_login_path_is_suspicious():
 
     assert result['risk_level'] == 'LOW'
     assert result['risk_score'] == 25
+
+
+def test_multiple_indicators_use_explicit_indicator_count():
+    result = analyze_url('https://example.com/login')
+
+    assert result['risk_score'] == 5
+    assert result['risk_level'] == 'LOW'
 
