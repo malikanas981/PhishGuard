@@ -98,6 +98,24 @@ function Scanner() {
             </button>
           </div>
 
+                    <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setUrl('https://example.com')}
+              className="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
+            >
+              Try Safe URL
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setUrl('http://192.168.1.10/login')}
+              className="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
+            >
+              Try Suspicious URL
+            </button>
+          </div>
+
           {error && (
             <div className="mt-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-300">
               {error}
@@ -107,6 +125,9 @@ function Scanner() {
           {result && (
             <div className="mt-8 rounded-xl border border-slate-800 bg-slate-900 p-6">
               <h2 className="text-2xl font-bold">Scan Result</h2>
+              <p className="mt-2 text-sm text-slate-400">
+                Security analysis completed. Review the risk score and detected indicators below.
+              </p>
 
               <div className="mt-5 grid gap-4 sm:grid-cols-3">
                 <div>
@@ -181,6 +202,14 @@ function App() {
 }
 
 export default App
+
+
+
+
+
+
+
+
 
 
 
