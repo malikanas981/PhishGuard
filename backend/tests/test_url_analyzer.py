@@ -17,8 +17,8 @@ def test_http_url_is_flagged():
 def test_ip_address_with_login_is_suspicious():
     result = analyze_url("http://192.168.1.10/login")
 
-    assert result["risk_score"] == 50
-    assert result["risk_level"] == "MEDIUM"
+    assert result["risk_score"] == 70
+    assert result["risk_level"] == "HIGH"
     assert "URL uses an IP address instead of a domain name" in result["reasons"]
 
 
@@ -28,4 +28,25 @@ def test_shortened_url_is_suspicious():
     assert result["risk_score"] == 15
     assert result["risk_level"] == "LOW"
     assert "URL uses a URL shortening service" in result["reasons"]
+
+
+def test_suspicious_account_verification_url():
+    result = analyze_url(
+        "https://secure-account-verification.example.com/login"
+    )
+
+    assert result["risk_score"] == 35
+    assert result["risk_level"] == "MEDIUM"
+    assert "URL contains multiple suspicious indicators" in result["reasons"]
+
+
+def test_suspicious_paypal_login_url():
+    result = analyze_url(
+        "https://paypal-login-secure.example.com/verify-password"
+    )
+
+    assert result["risk_score"] == 35
+    assert result["risk_level"] == "MEDIUM"
+    assert "URL contains multiple suspicious indicators" in result["reasons"]
+
 

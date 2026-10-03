@@ -31,7 +31,7 @@ def analyze_url(url: str) -> dict:
     score = 0
     reasons = []
 
-    hostname = parsed_url.hostname or ""
+    hostname = (parsed_url.hostname or "").lower()
     url_lower = url.lower()
 
     if parsed_url.scheme != "https":
@@ -54,11 +54,13 @@ def analyze_url(url: str) -> dict:
         score += 5
         reasons.append("Domain contains hyphens")
 
-    keyword_matches = [
-        keyword
-        for keyword in SUSPICIOUS_KEYWORDS
-        if keyword in url_lower
-    ]
+    keyword_matches = sorted(
+        {
+            keyword
+            for keyword in SUSPICIOUS_KEYWORDS
+            if keyword in url_lower
+        }
+    )
 
     if keyword_matches:
         score += min(len(keyword_matches) * 5, 20)
@@ -82,6 +84,16 @@ def analyze_url(url: str) -> dict:
     if hostname in SHORTENER_DOMAINS:
         score += 15
         reasons.append("URL uses a URL shortening service")
+
+    # Multiple phishing indicators together increase the risk.
+    indicator_count = len(reasons)
+
+    if indicator_count >= 3:
+        score += 20
+        reasons.append("URL contains multiple suspicious indicators")
+    elif indicator_count == 2:
+        score += 10
+        reasons.append("URL contains multiple suspicious indicators")
 
     score = min(score, 100)
 
