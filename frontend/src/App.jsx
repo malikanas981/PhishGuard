@@ -140,9 +140,7 @@ function Scanner() {
 
                 <div>
                   <p className="text-sm text-slate-400">Risk Level</p>
-                  <p className="mt-1 text-3xl font-bold">
-                    {result.risk_level}
-                  </p>
+                  <p className={`mt-1 inline-flex rounded-full px-3 py-1 text-lg font-bold ${result.risk_level === 'HIGH' ? 'bg-red-500/15 text-red-400' : result.risk_level === 'MEDIUM' ? 'bg-yellow-500/15 text-yellow-400' : 'bg-green-500/15 text-green-400'}`}>{result.risk_level}</p>
                 </div>
 
                 <div>
@@ -204,6 +202,8 @@ function App() {
 }
 
 export default App
+
+
 
 
 
