@@ -9,14 +9,17 @@ def send_verification_email(
     otp: str,
 ) -> None:
     message = EmailMessage()
-    message["Subject"] = "PhishGuard Email Verification Code"
+    message["Subject"] = "Your PhishGuard verification code"
     message["From"] = settings.SMTP_FROM_EMAIL
     message["To"] = recipient_email
 
     message.set_content(
-        f"Your PhishGuard verification code is: {otp}\n\n"
-        f"This code will expire in {settings.OTP_EXPIRE_MINUTES} minutes.\n\n"
-        "If you did not create a PhishGuard account, you can safely ignore this email."
+        f"""Your PhishGuard verification code is: {otp}
+
+This code will expire in {settings.OTP_EXPIRE_MINUTES} minutes.
+
+If you did not create a PhishGuard account, you can safely ignore this email.
+"""
     )
 
     with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
