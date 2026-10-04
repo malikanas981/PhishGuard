@@ -153,12 +153,10 @@ function Scanner() {
 
               <div className="mt-6">
                 <p className="text-sm font-semibold text-slate-300">
-                  Analysis
+                  Detection Indicators
                 </p>
 
-                <p className="mt-2 text-slate-400">
-                  {result.reasons}
-                </p>
+                <div className="mt-3 space-y-2">{result.reasons.split(", ").map((reason, index) => (<div key={`${reason}-${index}`} className="rounded-lg border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-slate-300">{reason}</div>))}</div>
               </div>
             </div>
           )}
@@ -202,21 +200,3 @@ function App() {
 }
 
 export default App
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
