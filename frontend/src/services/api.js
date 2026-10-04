@@ -1,4 +1,4 @@
-﻿const API_BASE_URL = 'http://127.0.0.1:8000/api'
+const API_BASE_URL = 'http://127.0.0.1:8000/api'
 
 export async function registerUser(email, fullName, password) {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -158,6 +158,43 @@ export async function getMyProfile(token) {
 
   if (!response.ok) {
     throw new Error(data.detail || 'Unable to load profile')
+  }
+
+  return data
+}
+
+export async function getAdminUsers(token) {
+  const response = await fetch(`${API_BASE_URL}/admin/users`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Unable to load users')
+  }
+
+  return data
+}
+
+
+export async function updateAdminUserStatus(token, userId) {
+  const response = await fetch(
+    `${API_BASE_URL}/admin/users/${userId}/status`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  )
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Unable to update user status')
   }
 
   return data
