@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import api_router
+from app.db.session import Base, engine
+from app import models
 
 
 app = FastAPI(
@@ -22,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+Base.metadata.create_all(bind=engine)
 app.include_router(api_router)
 
 
