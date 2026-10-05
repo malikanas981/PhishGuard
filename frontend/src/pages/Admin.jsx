@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { getAdminUsers, updateAdminUserStatus } from '../services/api'
+import API_BASE_URL, { getAdminUsers, updateAdminUserStatus } from '../services/api'
 
 function Admin() {
   const navigate = useNavigate()
@@ -19,7 +19,7 @@ function Admin() {
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/admin/me', {
+        const response = await fetch(`${API_BASE_URL}/admin/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
