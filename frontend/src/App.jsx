@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import VerifyEmail from './pages/VerifyEmail'
 import Admin from './pages/Admin'
+import AdminLogin from './pages/AdminLogin'
 
 function Scanner() {
   const [url, setUrl] = useState('')
@@ -180,7 +181,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Scanner />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/scanner" element={<Scanner />} />
         <Route
           path="/dashboard"
           element={
@@ -193,7 +195,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />`r`n        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   )

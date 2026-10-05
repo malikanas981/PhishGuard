@@ -1,31 +1,28 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { registerUser } from '../services/api'
+import { loginUser } from '../services/api'
 
-function Register() {
+function AdminLogin() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
-  const [fullName, setFullName] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleRegister(event) {
+  async function handleLogin(event) {
     event.preventDefault()
 
     setLoading(true)
     setError('')
 
     try {
-      await registerUser(email, fullName, password)
-      navigate('/verify-email', { state: { email } })
-    } catch (err) {
-      if (err.message === 'Email is already registered') {
-  navigate('/login')
-  return
-}
+      const data = await loginUser(email, password)
 
-      setError(err.message || 'Registration failed')
+      localStorage.setItem('phishguard_token', data.access_token)
+
+      navigate('/admin')
+    } catch (err) {
+      setError(err.message || 'Admin login failed')
     } finally {
       setLoading(false)
     }
@@ -41,40 +38,25 @@ function Register() {
             </p>
 
             <h1 className="mt-3 text-3xl font-bold">
-              Create Account
+              Admin Login
             </h1>
 
             <p className="mt-2 text-sm text-slate-400">
-              Register to access your security dashboard.
+              Sign in to access the administration panel.
             </p>
           </div>
 
-          <form onSubmit={handleRegister} className="mt-8 space-y-5">
+          <form onSubmit={handleLogin} className="mt-8 space-y-5">
             <div>
               <label className="text-sm font-medium text-slate-300">
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                value={fullName}
-                onChange={(event) => setFullName(event.target.value)}
-                placeholder="Your full name"
-                required
-                className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-slate-300">
-                Email
+                Admin Email
               </label>
 
               <input
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@example.com"
+                placeholder="admin@example.com"
                 required
                 className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400"
               />
@@ -89,9 +71,8 @@ function Register() {
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="Create a password"
+                placeholder="Enter admin password"
                 required
-                minLength={8}
                 className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400"
               />
             </div>
@@ -107,28 +88,16 @@ function Register() {
               disabled={loading}
               className="w-full rounded-lg bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? 'Signing in...' : 'Admin Sign In'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-slate-400">
-              Already have an account?{' '}
-              <Link
-                to="/login"
-                className="text-cyan-400 hover:text-cyan-300"
-              >
-                Sign In
-              </Link>
-            </p>
-          </div>
-
-          <div className="mt-3 text-center">
             <Link
-              to="/scanner"
+              to="/"
               className="text-sm text-slate-400 hover:text-cyan-400"
             >
-              Back to Scanner
+              Back to User Login
             </Link>
           </div>
         </div>
@@ -137,4 +106,4 @@ function Register() {
   )
 }
 
-export default Register
+export default AdminLogin

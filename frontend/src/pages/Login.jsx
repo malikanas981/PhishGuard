@@ -92,10 +92,29 @@ function Login() {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 space-y-4 text-center">
+            <p className="text-sm text-slate-400">
+              Don't have an account?{' '}
+              <Link
+                to="/register"
+                className="font-semibold text-cyan-400 hover:text-cyan-300"
+              >
+                Register
+              </Link>
+            </p>
+
+            <div className="border-t border-slate-800 pt-4">
+              <Link
+                to="/admin/login"
+                className="inline-block text-sm font-semibold text-slate-300 hover:text-cyan-400"
+              >
+                Admin Login
+              </Link>
+            </div>
+
             <Link
-              to="/"
-              className="text-sm text-slate-400 hover:text-cyan-400"
+              to="/scanner"
+              className="block text-sm text-slate-500 hover:text-cyan-400"
             >
               Back to Scanner
             </Link>

@@ -71,7 +71,7 @@ function Dashboard() {
   Profile
 </Link>
             <Link
-              to="/"
+              to="/scanner"
               className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 hover:border-cyan-400 hover:text-cyan-400"
             >
               Scanner
